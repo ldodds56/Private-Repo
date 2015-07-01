@@ -36,7 +36,8 @@ public class ProcessedData {
 			file.write("Most used location \t");
 			file.write("Successful three tote? \t");
 			file.write("Average Cans Grabbed \t");
-			file.write("Max Cans Grabbed \n");
+			file.write("Max Cans Grabbed \t");
+			file.write("Number of Can Grabbings \n");
 			for(Team team : tournament.getTeams()){
 				file.write(Integer.toString(team.getTeamNumber()) + "\t");
 				file.write(Double.toString(getAverageTotesPerMatch(team)) + "\t");
@@ -46,9 +47,10 @@ public class ProcessedData {
 				file.write(Double.toString(getCans(team)) + "\t");
 				file.write(Double.toString(getNoodles(team)) + "\t");
 				file.write(getLocation(team) + "\t");
-				file.write(getThreeTote(team) + "\t");
+				file.write((getThreeTote(team) != 0 ? "Yes: " + getThreeTote(team) : "No") + "\t");
 				file.write(Double.toString(getAverageCansGrabbed(team)) + "\t");
-				file.write(Integer.toString(getMaxCansGrabbed(team)) + "\n");
+				file.write(Integer.toString(getMaxCansGrabbed(team)) + "\t");
+				file.write(Integer.toString(getCanGrabbings(team)) + "\n");
 				file.flush();
 			}
 			file.close();
@@ -174,11 +176,12 @@ public class ProcessedData {
 	}
 	
 	//have they ever completed three tote?
-	private boolean getThreeTote(Team team){
+	private int getThreeTote(Team team){
+		int threeTote = 0;
 		for(Match match : team.getMatches())
 			if(match.getThreeTote())
-				return true;
-		return false;
+				threeTote++;
+		return threeTote;
 	}
 	
 	//returns average cans grabbed per match
@@ -201,5 +204,13 @@ public class ProcessedData {
 			cansGrabbed = Math.max(cansGrabbed,	match.getCansGrabbed());
 		}
 		return cansGrabbed;
+	}
+	
+	private int getCanGrabbings(Team team){
+		int canGrabbings = 0;
+		for(Match match : team.getMatches()){
+			if(match.getCansGrabbed() != 0) canGrabbings++;
+		}
+		return canGrabbings;
 	}
 }

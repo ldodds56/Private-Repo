@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ScoutingData {
-	private String filePath = "C:\\Users\\Laura\\Desktop\\test event.csv";
-	private String csvSplitBy = ",";
+	private String filePath = "C:\\Users\\Laura\\Desktop\\midknight mayhem.csv";
+	private String csvSplitBy = "\t";
 	private ArrayList<MatchData> matches = new ArrayList<MatchData>();
 	
 	public void separateFile(){
@@ -17,7 +17,6 @@ public class ScoutingData {
 			String line = br.readLine();
 			line = br.readLine();
 			while(line != null){
-				System.out.println(line);
 				String[] data = line.split(csvSplitBy);
 				MatchData match = new MatchData(data);
 				matches.add(match);
