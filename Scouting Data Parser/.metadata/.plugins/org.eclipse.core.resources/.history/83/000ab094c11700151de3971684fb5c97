@@ -1,0 +1,26 @@
+package tournament;
+
+public class Stack {
+	private int height;
+	private boolean can;
+	private boolean noodle;
+	
+	public Stack(int height, boolean can, boolean noodle){
+		this.height = height;
+		this.can = can;
+		this.noodle = noodle;
+	}
+	
+	public int getHeight(){
+		return height;
+	}
+	
+	public boolean getCan(){
+		return can;
+	}
+	
+	public boolean getNoodle(){
+		return noodle;
+	}
+
+}

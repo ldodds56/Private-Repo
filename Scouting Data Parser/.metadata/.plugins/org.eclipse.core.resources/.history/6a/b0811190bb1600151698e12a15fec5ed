@@ -1,0 +1,7 @@
+package scouting_data;
+
+public class ScoutingData {
+	private String filePath;
+	
+
+}

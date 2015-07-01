@@ -1,0 +1,63 @@
+package scouting_data;
+
+public class MatchData {
+	private int teamNumber;
+	private int[] totes = new int[6];
+	private boolean[] cans = new boolean [6];
+	private boolean[] noodles = new boolean[6];
+	public enum location = {HP, LF, NA};
+	
+	private boolean threeTote;
+	private int cansGrabbed;
+	
+	public MatchData(String[] line){
+		teamNumber = Integer.parseInt(line[2]);
+		
+		int toteCount;
+		int toteBinary;
+		
+		for(int i = 0; i < 6; i++){
+			toteCount = 0;
+			toteBinary = Integer.parseInt(line[5 * i + 16]);
+			while(toteBinary != 0){
+				if(toteBinary % 10 == 1) { toteCount++; }
+				toteBinary /= 10;
+			}
+			totes[i] = toteCount;
+			cans[i] = Integer.parseInt(line[5 * i + 17]) == 1;
+			noodles[i] = Integer.parseInt(line[5 * i + 18]) == 1;
+		}
+		
+		if(Integer.parseInt(line[6]) == 3) { threeTote = true;}
+		else { threeTote = false; }
+		
+		String[] cansGrabbedString = line[8].split(" ");
+		if(cansGrabbedString[0] == null || cansGrabbedString[0].isEmpty()) { cansGrabbed = 0; }
+		else{ cansGrabbed = cansGrabbedString.length; }
+	}
+	
+	public int getTeamNumber(){
+		return teamNumber;
+	}
+	
+	public int[] getTotes(){
+		return totes;
+	}
+	
+	public boolean[] getCans(){
+		return cans;
+	}
+	
+	public boolean[] getNoodles(){
+		return noodles;
+	}
+	
+	public boolean getThreeTote(){
+		return threeTote;
+	}
+	
+	public int getCansGrabbed(){
+		return cansGrabbed;
+	}
+
+}

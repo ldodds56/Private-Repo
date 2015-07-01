@@ -1,0 +1,22 @@
+package tournament;
+
+import java.util.ArrayList;
+
+public class Match {
+	private ArrayList<Stack> stacks;
+	private boolean threeTote;
+	private int cansGrabbed;
+	
+	public void setStack(int height, boolean can, boolean noodle){
+		Stack stack = new Stack(height, can, noodle);
+		stacks.add(stack);
+	}
+	
+	public void setThreeTote(boolean threeTote){
+		this.threeTote = threeTote;
+	}
+	
+	public void setCansGrabbed(int cansGrabbed){
+		this.cansGrabbed = cansGrabbed;
+	}
+}

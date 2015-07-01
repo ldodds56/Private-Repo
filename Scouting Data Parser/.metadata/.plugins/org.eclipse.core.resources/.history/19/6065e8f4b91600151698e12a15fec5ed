@@ -1,0 +1,17 @@
+package tournament;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import scouting_data.MatchData;
+import scouting_data.ScoutingData;
+
+public class Tournament {
+	private ArrayList<Team> teams;
+	private ScoutingData data;
+	private File file;
+	
+	public void setData(ArrayList<MatchData> matches){
+		
+	}
+}

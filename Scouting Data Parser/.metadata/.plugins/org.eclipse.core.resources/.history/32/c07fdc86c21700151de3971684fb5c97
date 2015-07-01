@@ -1,0 +1,14 @@
+package main;
+
+import scouting_data.ScoutingData;
+import tournament.Tournament;
+
+public class Main {
+	public static void main(String[] args){
+		ScoutingData data = new ScoutingData();
+		data.separateFile();
+		
+		Tournament tournament = new Tournament();
+		tournament.setData(data.getMatchData());
+	}
+}

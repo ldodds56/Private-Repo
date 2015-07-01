@@ -1,0 +1,29 @@
+package tournament;
+
+
+import java.util.ArrayList;
+import scouting_data.MatchData;
+
+public class Tournament {
+	private ArrayList<Team> teams;
+	private int numberOfTeams;
+	
+	public void setData(ArrayList<Team> teams, ArrayList<MatchData> matches){
+		for(Team team : teams){
+			this.teams.add(team);
+		}
+		
+		for(MatchData data : matches){
+			for(Team team: teams){
+				if(team.getTeamNumber() == data.getTeamNumber()){
+					team.setMatch(data);
+				}
+			}
+		}
+	}
+	
+	public ArrayList<Team> getTeams(){
+		return teams;
+	}
+	
+}

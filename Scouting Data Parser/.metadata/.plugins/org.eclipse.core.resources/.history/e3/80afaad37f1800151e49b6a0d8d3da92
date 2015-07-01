@@ -1,0 +1,189 @@
+package scouting_data;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
+
+import scouting_data.MatchData.location;
+import tournament.Match;
+import tournament.Stack;
+import tournament.Team;
+import tournament.Tournament;
+
+public class ProcessedData {
+	private Tournament tournament;
+	
+	public ProcessedData(Tournament fullData){
+		tournament = fullData;
+	}
+	
+	public void writeProcessedData(){
+		try{
+			String filePath = "C:\\Users\\Laura\\Desktop\\FilteredData.csv";
+			File f = new File(filePath);
+			if(f.exists()){
+				f.delete();
+			}
+			f.createNewFile();
+			FileWriter file = new FileWriter(f, true);
+			file.write("Team Number \t");
+			file.write("Average Totes per Match \t");
+			file.write("Average Stacks per Match\t");
+			file.write(Double.toString(getStandardDev(team)) + "\t");
+			file.write(Double.toString(getCans(team)) + "\t");
+			file.write(getLocation(team) + "\t");
+			file.write(getThreeTote(team) + "\t");
+			file.write(Double.toString(getAverageCansGrabbed(team)) + "\n");
+			for(Team team : tournament.getTeams()){
+				System.out.println(team.getTeamNumber());
+				file.write(Integer.toString(team.getTeamNumber()) + "\t");
+				file.write(Double.toString(getAverageTotesPerMatch(team)) + "\t");
+				file.write(Double.toString(getStacksPerMatch(team)) + "\t");
+				file.write(Double.toString(getStandardDev(team)) + "\t");
+				file.write(Double.toString(getCans(team)) + "\t");
+				file.write(getLocation(team) + "\t");
+				file.write(getThreeTote(team) + "\t");
+				file.write(Double.toString(getAverageCansGrabbed(team)) + "\n");
+				file.flush();
+			}
+			file.close();
+			
+		}catch(Exception e){ System.out.println(e); }
+		
+		//TODO: add "max" functions (maxCansGrabbed, maxStackHeight, maxStacksPerMatch)
+	}
+	
+	//return average stack height
+	private double getAverageTotesPerMatch(Team team){
+		int matches = 0;
+		int totalTotes = 0;
+		for(Match match : team.getMatches()){
+			matches++;
+			for(Stack stack : match.getStacks()){
+				if(stack.getHeight() != 0) {
+					totalTotes += stack.getHeight();
+				}
+			}
+		}
+		if(matches == 0) return 0;
+		return (double) totalTotes / matches;
+	}
+	
+	//return average stacks per match
+	private double getStacksPerMatch(Team team){
+		int matches = 0;
+		int stacksPerMatch = 0;
+		for(Match match : team.getMatches()){
+			matches++;
+			for(Stack stack : match.getStacks()){
+				if(stack.getHeight() != 0) {
+					stacksPerMatch++;
+				}
+			}
+		}
+		if(matches == 0) return 0;
+		return (double) stacksPerMatch / matches;
+	}
+	
+	//return standard dev of totes used per match
+	private double getStandardDev(Team team){
+		ArrayList<Integer> totesPerMatch = new ArrayList<Integer>();
+		int totes = 0;
+		int totalTotes = 0;
+		for(Match match : team.getMatches()){
+			for(Stack stack : match.getStacks()){
+				if(stack.getHeight() != 0){
+					totes += stack.getHeight();
+					totalTotes += stack.getHeight();
+				}
+			}
+			totesPerMatch.add(new Integer(totes));
+			totes = 0;
+		}
+		double average = (double) totalTotes / totesPerMatch.size();
+		double squaredDiffSum = 0;
+		for(Integer match: totesPerMatch){
+			squaredDiffSum += Math.pow(match.intValue() - average, 2);
+		}
+		if(totesPerMatch.size() == 0) return 0;
+		return squaredDiffSum / totesPerMatch.size();
+	}
+	
+	//return % use of can
+	private double getCans(Team team){
+		int totalCans = 0;
+		int totalStacks = 0;
+		for(Match match : team.getMatches()){
+			for(Stack stack : match.getStacks()){
+				if(stack.getHeight() != 0){
+					totalStacks++;
+					if(stack.getCan()) totalCans++;
+				}
+			}
+		}
+		return (double) totalCans / totalStacks;
+	}
+	
+	//return % use of noodles
+	private double getNoodles(Team team){
+		int totalNoodles = 0;
+		int totalStacks = 0;
+		for(Match match : team.getMatches()){
+			for(Stack stack : match.getStacks()){
+				if(stack.getHeight() != 0){
+					totalStacks++;
+					if(stack.getNoodle()) totalNoodles++;
+				}
+			}
+		}
+		return (double) totalNoodles / totalStacks;
+	}
+	
+	private location getLocation(Team team){
+		int HPStacks = 0;
+		int LFStacks = 0;
+		location trend = location.EMPTY;
+		for(Match match : team.getMatches()){
+			for(Stack stack : match.getStacks()){
+				if(stack.getLocation() != location.NOT_STACK){
+					if(stack.getLocation() == location.HP){ 
+						HPStacks++;
+						trend = location.HP;
+					}
+					else if(stack.getLocation() == location.LF) {
+						LFStacks++;
+						trend = location.LF;
+					}
+					else {
+						if(trend == location.HP) HPStacks++;
+						else LFStacks++;
+					}
+				}
+			}
+		}
+		if(HPStacks != 0 || LFStacks != 0){
+			if(HPStacks > LFStacks) return location.HP;
+			return location.LF;
+		}
+		return location.NOT_STACK;
+	}
+	
+	//have they ever completed three tote?
+	private boolean getThreeTote(Team team){
+		for(Match match : team.getMatches())
+			if(match.getThreeTote())
+				return true;
+		return false;
+	}
+	
+	//returns average cans grabbed per match
+	private double getAverageCansGrabbed(Team team){
+		int cansGrabbed = 0;
+		int matches = 0;
+		for(Match match : team.getMatches()){
+			cansGrabbed += match.getCansGrabbed();
+			matches++;
+		}
+		return (double) cansGrabbed / matches;
+	}
+}

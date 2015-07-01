@@ -1,0 +1,52 @@
+package scouting_data;
+
+public class MatchData {
+	private int teamNumber;
+	private int[] totes;
+	private boolean[] cans;
+	private boolean[] noodles;
+	private boolean threeTote;
+	private int cansGrabbed;
+	
+	public MatchData(String[] line){
+		teamNumber = Integer.parseInt(line[2]);
+		
+		if(Integer.parseInt(line[6]) == 3) { threeTote = true;}
+		else { threeTote = false; }
+		
+		if(line[8] == "\t") { cansGrabbed = 0; System.out.println("Empty");}
+		else{
+			String[] cans = line[8].split(" ");
+			cansGrabbed = cans.length;
+		}
+		
+		System.out.println(line[8]);
+		System.out.println(cansGrabbed);
+		//TODO: implement constructor in MatchData
+	}
+	
+	public int getTeamNumber(){
+		return teamNumber;
+	}
+	
+	public int[] getTotes(){
+		return totes;
+	}
+	
+	public boolean[] getCans(){
+		return cans;
+	}
+	
+	public boolean[] getNoodles(){
+		return noodles;
+	}
+	
+	public boolean getThreeTote(){
+		return threeTote;
+	}
+	
+	public int getCansGrabbed(){
+		return cansGrabbed;
+	}
+
+}

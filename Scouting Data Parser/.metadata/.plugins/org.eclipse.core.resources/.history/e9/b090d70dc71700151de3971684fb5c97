@@ -1,0 +1,30 @@
+package tournament;
+
+import java.util.ArrayList;
+
+import scouting_data.MatchData;
+
+public class Team {
+	private int teamNumber;
+	private ArrayList<Match> matches = new ArrayList<Match>();
+	
+	public Team(int teamNumber){
+		this.teamNumber = teamNumber;
+	}
+	
+	public void setMatch(MatchData data){
+		teamNumber = data.getTeamNumber();
+		Match match = new Match();
+		for(int i = 0; i < data.getTotes().length; i++){
+			match.setStack(data.getTotes()[i], data.getCans()[i], data.getNoodles()[i], data.getLocations()[i]);	
+		}
+		match.setThreeTote(data.getThreeTote());
+		match.setCansGrabbed(data.getCansGrabbed());
+		matches.add(match);
+	}
+	
+	public int getTeamNumber(){
+		return teamNumber;
+	}
+
+}

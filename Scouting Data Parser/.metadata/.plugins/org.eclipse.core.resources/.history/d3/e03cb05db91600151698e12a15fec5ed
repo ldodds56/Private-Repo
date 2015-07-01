@@ -1,0 +1,15 @@
+package tournament;
+
+import java.util.ArrayList;
+
+import scouting_data.MatchData;
+
+public class Team {
+	private int teamNumber;
+	private ArrayList<Match> matches;
+	
+	public void setMatch(MatchData data){
+		
+	}
+
+}

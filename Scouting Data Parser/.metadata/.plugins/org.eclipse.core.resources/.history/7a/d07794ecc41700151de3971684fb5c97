@@ -1,0 +1,41 @@
+package main;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import scouting_data.ScoutingData;
+import tournament.Team;
+import tournament.Tournament;
+
+public class Main {
+	private static String filePath = "C:\\Users\\Laura\\Desktop\\TeamList.csv";
+	public static void main(String[] args){
+		ScoutingData data = new ScoutingData();
+		data.separateFile();
+		
+		try{
+			ArrayList<Team> teams = new ArrayList<Team>();
+			BufferedReader br = new BufferedReader(new FileReader( filePath ));
+			String line = br.readLine();
+			while(line != null){
+				teams.add(new Team(Integer.parseInt(line)));
+				line = br.readLine();
+			}
+			
+			Tournament tournament = new Tournament();
+			tournament.setData(teams, data.getMatchData());		
+			br.close();
+		}
+		catch(FileNotFoundException e){ }
+		catch(IOException e){ }
+		finally { }
+		
+		
+		
+		
+		
+	}
+}

@@ -1,0 +1,10 @@
+package main;
+
+import scouting_data.ScoutingData;
+
+public class Main {
+	public static void main(String[] args){
+		ScoutingData data = new ScoutingData();
+		data.separateFile();
+	}
+}

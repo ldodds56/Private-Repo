@@ -1,0 +1,31 @@
+package main;
+
+import java.awt.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import scouting_data.ScoutingData;
+import tournament.Team;
+import tournament.Tournament;
+
+public class Main {
+	public static void main(String[] args){
+		ScoutingData data = new ScoutingData();
+		data.separateFile();
+		
+		ArrayList<Team> teams = new ArrayList<Team>();
+		BufferedReader br = new BufferedReader(new FileReader( filePath ));
+		String line = br.readLine();
+		while(line != null){
+			teams.add(new Team(Integer.parseInt(line)));
+		}
+		
+		
+		Tournament tournament = new Tournament();
+		tournament.setData(data.getMatchData());
+		
+		
+	}
+}
