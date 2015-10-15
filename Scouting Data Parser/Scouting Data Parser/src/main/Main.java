@@ -6,6 +6,7 @@ import tournament.Tournament;
 
 public class Main {
 	public static void main(String[] args){
+		try{
 		ScoutingData data = new ScoutingData();
 		data.separateFile();
 				
@@ -15,5 +16,8 @@ public class Main {
 		
 		ProcessedData pData = new ProcessedData(tournament);
 		pData.writeProcessedData();
+		}
+		catch(Exception e){System.out.println("Failed"); }
+		System.out.println("Done");
 	}
 }

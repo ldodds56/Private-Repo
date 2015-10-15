@@ -27,27 +27,26 @@ public class ProcessedData {
 			f.createNewFile();
 			FileWriter file = new FileWriter(f, true);
 			file.write("Team number \t");
-			file.write("Average totes per match \t");
-			file.write("Average stacks per match \t");
-			file.write("Standard deviation of totes used per match \t");
-			file.write("Use cans more than 60% \t");
-			file.write("Percentage of stacks with cans \t");
-			file.write("Percentage of stacks with noodles \t");
 			file.write("Most used location \t");
+			file.write("Average points per match \t");
+			file.write("Average totes per match \t");
+			file.write("Percentage of stacks with cans \t");
+			file.write("Max Stack Height \t");
+			file.write("Average stacks per match \t");
+			file.write("Percentage of stacks with noodles \t");
 			file.write("Successful three tote? \t");
 			file.write("Average Cans Grabbed \t");
 			file.write("Max Cans Grabbed \t");
 			file.write("Number of Can Grabbings \n");
 			for(Team team : tournament.getTeams()){
 				file.write(Integer.toString(team.getTeamNumber()) + "\t");
-				file.write(Double.toString(getAverageTotesPerMatch(team)) + "\t");
-				file.write(Double.toString(getStacksPerMatch(team)) + "\t");
-				file.write(Double.toString(getPointsPerMatch(team)) + "\t");
-				file.write(Integer.toString(getMaxStackHeight(team)) + "\t");
-				file.write(Boolean.toString(getCans(team) > .6) + "\t");
-				file.write(Double.toString(getCans(team)) + "\t");
-				file.write(Double.toString(getNoodles(team)) + "\t");
 				file.write(getLocation(team) + "\t");
+				file.write(Double.toString(getPointsPerMatch(team)) + "\t");
+				file.write(Double.toString(getAverageTotesPerMatch(team)) + "\t");
+				file.write(Double.toString(getCans(team)) + "\t");
+				file.write(Integer.toString(getMaxStackHeight(team)) + "\t");
+				file.write(Double.toString(getStacksPerMatch(team)) + "\t");
+				file.write(Double.toString(getNoodles(team)) + "\t");
 				file.write((getThreeTote(team) != 0 ? "Yes: " + getThreeTote(team) : "No") + "\t");
 				file.write(Double.toString(getAverageCansGrabbed(team)) + "\t");
 				file.write(Integer.toString(getMaxCansGrabbed(team)) + "\t");
@@ -98,6 +97,7 @@ public class ProcessedData {
 		int matches = 0;
 		int totesWithCan = 0;
 		int totes = 0;
+		int noodles = 0;
 		for(Match match : team.getMatches()){
 			matches++;
 			for(Stack stack : match.getStacks()){
@@ -107,10 +107,12 @@ public class ProcessedData {
 				else{
 					totes += stack.getHeight();
 				}
+				if(stack.getNoodle())
+					noodles++;
 			}
 		}
 		if(matches == 0) return 0;
-		return (double) (6 * totesWithCan + 2 * totes) / matches;
+		return ((double) (6 * totesWithCan + 2 * totes) / matches) + (6 * noodles);
 	}
 		
 	//return standard dev of totes used per match
@@ -194,8 +196,8 @@ public class ProcessedData {
 	
 	//returns average cans grabbed per match
 	private double getAverageCansGrabbed(Team team){
-		int cansGrabbed = 0;
-		int matches = 0;
+		double cansGrabbed = 0;
+		double matches = 0;
 		for(Match match : team.getMatches()){
 			if(match.getCansGrabbed() != 0){
 				cansGrabbed += match.getCansGrabbed();
@@ -203,7 +205,7 @@ public class ProcessedData {
 			}
 		}
 		if(matches == 0) { return 0; }
-		return (double) cansGrabbed / matches;
+		return cansGrabbed / matches;
 	}
 	
 	private int getMaxCansGrabbed(Team team){
