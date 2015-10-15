@@ -42,7 +42,8 @@ public class ProcessedData {
 				file.write(Integer.toString(team.getTeamNumber()) + "\t");
 				file.write(Double.toString(getAverageTotesPerMatch(team)) + "\t");
 				file.write(Double.toString(getStacksPerMatch(team)) + "\t");
-				file.write(Double.toString(getStandardDev(team)) + "\t");
+				file.write(Double.toString(getPointsPerMatch(team)) + "\t");
+				file.write(Integer.toString(getMaxStackHeight(team)) + "\t");
 				file.write(Boolean.toString(getCans(team) > .6) + "\t");
 				file.write(Double.toString(getCans(team)) + "\t");
 				file.write(Double.toString(getNoodles(team)) + "\t");
@@ -92,28 +93,35 @@ public class ProcessedData {
 		return (double) stacksPerMatch / matches;
 	}
 	
-	//return standard dev of totes used per match
-	private double getStandardDev(Team team){
-		ArrayList<Integer> totesPerMatch = new ArrayList<Integer>();
+	//return average stacks per match
+	private double getPointsPerMatch(Team team){
+		int matches = 0;
+		int totesWithCan = 0;
 		int totes = 0;
-		int totalTotes = 0;
 		for(Match match : team.getMatches()){
+			matches++;
 			for(Stack stack : match.getStacks()){
-				if(stack.getHeight() != 0){
+				if(stack.getCan()) {
+					totesWithCan += stack.getHeight();
+				}
+				else{
 					totes += stack.getHeight();
-					totalTotes += stack.getHeight();
 				}
 			}
-			totesPerMatch.add(new Integer(totes));
-			totes = 0;
 		}
-		double average = (double) totalTotes / totesPerMatch.size();
-		double squaredDiffSum = 0;
-		for(Integer match: totesPerMatch){
-			squaredDiffSum += Math.pow(match.intValue() - average, 2);
+		if(matches == 0) return 0;
+		return (double) (6 * totesWithCan + 2 * totes) / matches;
+	}
+		
+	//return standard dev of totes used per match
+	private int getMaxStackHeight(Team team){
+		int maxStack = 0;
+		for(Match match : team.getMatches()){
+			for(Stack stack : match.getStacks()){
+				maxStack = Math.max(maxStack, stack.getHeight());
+			}
 		}
-		if(totesPerMatch.size() == 0) return 0;
-		return squaredDiffSum / totesPerMatch.size();
+		return maxStack;
 	}
 	
 	//return % use of can
